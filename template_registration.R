@@ -18,10 +18,12 @@ antsRegistration(
     u = 1, 
     w = "[0.01,0.99]", 
     z = 1,
-    r = "[lhtemplate0.nii.gz, d711-lab.nii.gz, 1]",
+#     r = "[lhtemplate0.nii.gz, d711-lab.nii.gz, 1]",
     ## problem with loading d711-lab.nii.gz
     ##  "file  d711-lab.nii.gz does not exist"
     ##  can't run -r because it dpeends on this MI being loaded
+    ## commenting out causes fatal error in RStudio and running
+    ## in r from commandline gives same file does not exist error
     
   t = "Rigid[0.1]",
       m = "mi[lhtemplate0.nii.gz, d711-lab.nii.gz, 1, 32, Regular, 0.25]",
