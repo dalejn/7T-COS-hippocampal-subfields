@@ -7,6 +7,9 @@ library(ANTsR)
 # d711_t1 <- antsImageRead("/spin1/users/zhoud4/ants_scripts/d711-t1.nii.gz")
 # d711_t2s <- antsImageRead("/spin1/users/zhoud4/ants_scripts/d711-t2s.nii.gz")
 
+setwd("~/data/ants_scripts/")
+
+
 antsRegistration(
   list(
     d = 3,
@@ -16,7 +19,9 @@ antsRegistration(
     w = "[0.01,0.99]", 
     z = 1,
     r = "[lhtemplate0.nii.gz, d711-lab.nii.gz, 1]",
-    
+    ## problem with loading d711-lab.nii.gz
+    ##  "file  d711-lab.nii.gz does not exist"
+    ##  can't run -r because it dpeends on this MI being loaded
     
   t = "Rigid[0.1]",
       m = "mi[lhtemplate0.nii.gz, d711-lab.nii.gz, 1, 32, Regular, 0.25]",
