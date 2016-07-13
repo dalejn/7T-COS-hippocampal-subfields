@@ -1,2 +1,3 @@
 *.nii.gz
 *.Rhistory
+*.mat
