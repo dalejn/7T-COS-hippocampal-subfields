@@ -1,5 +1,8 @@
 library(ANTsR)
 
+filenames <- Sys.glob("/home/zhoud4/cpb/ants1/lhipp3_batch/d*.nii.gz")
+pathto <- "/spin1/users/zhoud4/ants_scripts/"
+
 antsRegistration(
   list(
     d = 3,

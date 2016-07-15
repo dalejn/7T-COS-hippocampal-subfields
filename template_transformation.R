@@ -12,8 +12,8 @@ img_rigid_only <- antsApplyTransforms(
   transformlist=translist,
 )
 
-# antsImageWrite(img_rigid_only,"/spin1/users/zhoud4/ants_scripts/lhd711-lab30WarpedToTemplate.nii.gz")
-# 
+antsImageWrite(img_rigid_only,"/spin1/users/zhoud4/ants_scripts/lhd711-lab30WarpedToTemplate.nii.gz")
+
 # antsApplyTransforms(
 #   list(
 #   d=3,  
