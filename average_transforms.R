@@ -8,9 +8,9 @@ path_to_cpb <- "/home/zhoud4/cpb/ants1/lhipp3_batch/"
 sub_list <- as.matrix(read.table("sub_full.txt"))
 
 #read list of transformed images for each modality for all subjects
-    lab_list <- as.matrix(Sys.glob(paste(path_to_dz,"lh*-lab-30WarpedToTemplate.nii.gz",sep="")))
-    t1_list <- as.matrix(Sys.glob(paste(path_to_dz,"lh*-t1-30WarpedToTemplate.nii.gz",sep="")))
-    t2s_list <- as.matrix(Sys.glob(paste(path_to_dz,"lh*-t2s-30WarpedToTemplate.nii.gz",sep="")))
+    lab_list <- as.matrix(Sys.glob(paste(path_to_dz,"lh*-lab-pass2-30WarpedToTemplate.nii.gz",sep="")))
+    t1_list <- as.matrix(Sys.glob(paste(path_to_dz,"lh*-t1-pass2-30WarpedToTemplate.nii.gz",sep="")))
+    t2s_list <- as.matrix(Sys.glob(paste(path_to_dz,"lh*-t2s-pass2-30WarpedToTemplate.nii.gz",sep="")))
 
 #read all images for each modality as antsImage class and assign variable name
 for (n in 1:nrow(lab_list)) {
@@ -46,8 +46,8 @@ t2s_image_list <- list(t2s_image1  ,   t2s_image10 ,   t2s_image11 ,   t2s_image
 
 #get average of each image for each modality, then write the average as .nii.gz file
 antsImageWrite(antsAverageImages(lab_image_list),"lhtemplate0_rigidtransform.nii.gz")
-  print("lhtemplate0_rigidtransform.nii.gz")
+  print("lhtemplate0_rigidtransform_pass2.nii.gz")
 antsImageWrite(antsAverageImages(t1_image_list),"lhtemplate1_rigidtransform.nii.gz")
-  print("lhtemplate1_rigidtransform.nii.gz")
+  print("lhtemplate1_rigidtransform_pass2.nii.gz")
 antsImageWrite(antsAverageImages(t2s_image_list),"lhtemplate2_rigidtransform.nii.gz")
-  print("lhtemplate2_rigidtransform.nii.gz")
+  print("lhtemplate2_rigidtransform_pass2.nii.gz")
