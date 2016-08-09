@@ -1,4 +1,10 @@
-Porting simplified multivariateTemplateConstruction into ANTsR
+##nipype MultivariateTemplateConstruction
+
+Working in Jupyter notebook: ants_test.ipynb. See Issues for to-do list
+
+---
+
+##Porting simplified multivariateTemplateConstruction into ANTsR
 
 Scripts work and with a few tweaks, can make the multiple iterations automatic
 
