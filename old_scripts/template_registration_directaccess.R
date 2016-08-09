@@ -1,5 +1,0 @@
-ANTsR::antsRegistration("-d", "3", "--float", "1", "--verbose", "1", "-u", "1", "-w", "[0.01,0.99]", "-z", "1", "-r", "[lhtemplate0.nii.gz,d711-lab.nii.gz,1]", "-t", "Rigid[0.1]", "-m", "MI[lhtemplate0.nii.gz,d711-lab.nii.gz,1,32,Regular,0.25]", "-m", "MI[lhtemplate1.nii.gz,d711-t1.nii.gz,1,32,Regular,0.25]", "-m", "MI[lhtemplate2.nii.gz,d711-t2s.nii.gz,1,32,Regular,0.25]", "-c", "[1000x500x250x0,1e-6,10]", "-f", "6x4x2x1", "-s", "4x2x1x0", 
-
-"-t", "Affine[0.1]", "-m", "MI[lhtemplate0.nii.gz,d711-lab.nii.gz,1,32,Regular,0.25]", "-m", "MI[lhtemplate1.nii.gz,d711-t1.nii.gz,1,32,Regular,0.25]", "-m", "MI[lhtemplate2.nii.gz,d711-t2s.nii.gz,1,32,Regular,0.25]", "-c", "[1000x500x250x0,1e-6,10]", "-f", "6x4x2x1", "-s", "4x2x1x0",
-
-"-t", "SyN[0.1,3,0]", "-m", "CC[lhtemplate0.nii.gz,d711-lab.nii.gz,1,4]", "-m", "CC[lhtemplate1.nii.gz,d711-t1.nii.gz,1,4]", "-m", "CC[lhtemplate2.nii.gz,d711-t2s.nii.gz,1,4]", "-c", "[100x100x70x20,1e-9,10]", "-f", "6x4x2x1", "-s", "3x2x1x0", "-o", "./lhd711-lab30")

@@ -4,11 +4,11 @@ Working in Jupyter notebook: ants_test.ipynb. See Issues for to-do list
 
 ---
 
-##Porting simplified multivariateTemplateConstruction into ANTsR
+##Porting simplified multivariateTemplateConstruction into ANTsR in multivariateTemplateConstruction.R
 
-Scripts work and with a few tweaks, can make the multiple iterations automatic
+Scripts work and with a few tweaks, can make the multiple iterations automatic.
 
-Individual steps of template construction (registrations, applying transforms, averaging transformed images) in '/pieces'. Example run for multiple iterations of the linear and non-linear transforms in '/test_run'
+Example run for multiple iterations of the linear (rigid and affine) and non-linear (BSplineSyN) transforms in '/test_run'
 
 Issues:
 
