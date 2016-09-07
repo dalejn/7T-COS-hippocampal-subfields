@@ -1,7 +1,12 @@
 ##nipype MultivariateTemplateConstruction
 
-Working in Jupyter notebook: ants_test.ipynb. See Issues for to-do list
+Working in Jupyter notebook: ants_test_slurm.ipynb. See Issues for to-do list
 
+Rigid x3
+Affine x2
+Bspline x4
+
+9 total workflows
 ---
 
 ##Porting simplified multivariateTemplateConstruction into ANTsR in multivariateTemplateConstruction.R
