@@ -2,12 +2,13 @@
 
 Working in Jupyter notebook: ants_test_slurm.ipynb. See Issues for to-do list
 
-Rigid x3
-Affine x2
-Bspline x4
-
+Rigid x3 <br />
+Affine x2 <br />
+Bspline x4 <br />
+ <br />
 9 total workflows
----
+
+-------------------------------
 
 ##Porting simplified multivariateTemplateConstruction into ANTsR in multivariateTemplateConstruction.R
 
