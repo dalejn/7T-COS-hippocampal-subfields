@@ -12,6 +12,8 @@ Bspline x4 <br />
 
 ##Porting simplified multivariateTemplateConstruction into ANTsR in multivariateTemplateConstruction.R
 
+Using RStudio/0.98_3.2.3-9.1
+
 Scripts work and with a few tweaks, can make the multiple iterations automatic.
 
 Example run for multiple iterations of the linear (rigid and affine) and non-linear (BSplineSyN) transforms in '/test_run'
