@@ -1,0 +1,40 @@
+160919-16:10:47,647 workflow INFO:
+	 Executing node jacobian.b13 in dir: /spin1/users/Hippo_hr/cpb/ants1/lhipp3_batch/normflow9/_subject_id_d714/jacobian
+160919-16:10:47,648 workflow DEBUG:
+	 []
+160919-16:10:47,648 workflow DEBUG:
+	 /spin1/users/Hippo_hr/cpb/ants1/lhipp3_batch/normflow9/_subject_id_d714/jacobian/_0x8b31466499e7ba85e3cdbb5d3269172e.json
+160919-16:10:47,648 workflow DEBUG:
+	 ('updatehash, overwrite, always_run, hash_exists', False, None, False, False)
+160919-16:10:47,648 workflow DEBUG:
+	 Node hash: 8b31466499e7ba85e3cdbb5d3269172e
+160919-16:10:47,648 workflow DEBUG:
+	 /spin1/users/Hippo_hr/cpb/ants1/lhipp3_batch/normflow9/_subject_id_d714/jacobian/_0x8b31466499e7ba85e3cdbb5d3269172e_unfinished.json found and can_resume is True or Node is a MapNode - resuming execution
+160919-16:10:47,648 workflow DEBUG:
+	 Creating /spin1/users/Hippo_hr/cpb/ants1/lhipp3_batch/normflow9/_subject_id_d714/jacobian
+160919-16:10:47,667 workflow DEBUG:
+	 writing pre-exec report to /spin1/users/Hippo_hr/cpb/ants1/lhipp3_batch/normflow9/_subject_id_d714/jacobian/_report/report.rst
+160919-16:10:47,672 workflow DEBUG:
+	 Executing node
+160919-16:10:47,673 workflow DEBUG:
+	 copying files to wd [execute=True, linksonly=False]
+160919-16:10:47,673 interface DEBUG:
+	 dimension_3
+160919-16:10:47,673 interface DEBUG:
+	 output_prefix_BSplineSyN_1Warp_
+160919-16:10:47,673 interface DEBUG:
+	 warp_file_/spin1/users/Hippo_hr/cpb/ants1/lhipp3_batch/normflow9/_subject_id_d714/antsreg_BSplineSyn_4/BSplineSyN_1Warp.nii.gz
+160919-16:10:47,674 workflow INFO:
+	 Running: ANTSJacobian 3 /spin1/users/Hippo_hr/cpb/ants1/lhipp3_batch/normflow9/_subject_id_d714/antsreg_BSplineSyn_4/BSplineSyN_1Warp.nii.gz BSplineSyN_1Warp_
+160919-16:10:47,681 interface DEBUG:
+	 dimension_3
+160919-16:10:47,682 interface DEBUG:
+	 output_prefix_BSplineSyN_1Warp_
+160919-16:10:47,682 interface DEBUG:
+	 warp_file_/spin1/users/Hippo_hr/cpb/ants1/lhipp3_batch/normflow9/_subject_id_d714/antsreg_BSplineSyn_4/BSplineSyN_1Warp.nii.gz
+160919-16:10:47,682 interface DEBUG:
+	 {'DISPLAY': ':1'}
+160919-16:10:48,212 interface INFO:
+	 stdout 2016-09-19T16:10:48.212057:Sorry! ANTSJacobian is deprecated 
+160919-16:10:48,212 interface INFO:
+	 stdout 2016-09-19T16:10:48.212057:Please use CreateJacobianDeterminantImage 
