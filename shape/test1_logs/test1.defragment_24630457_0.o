@@ -1,0 +1,10 @@
+Merging stat images
+test1_SEED1_tfce_corrp_tstat1.nii.gz -add test1_SEED2_tfce_corrp_tstat1.nii.gz -add test1_SEED3_tfce_corrp_tstat1.nii.gz -add test1_SEED4_tfce_corrp_tstat1.nii.gz -add test1_SEED5_tfce_corrp_tstat1.nii.gz
+test1_SEED1_tfce_corrp_tstat2.nii.gz -add test1_SEED2_tfce_corrp_tstat2.nii.gz -add test1_SEED3_tfce_corrp_tstat2.nii.gz -add test1_SEED4_tfce_corrp_tstat2.nii.gz -add test1_SEED5_tfce_corrp_tstat2.nii.gz
+test1_SEED1_tfce_corrp_tstat3.nii.gz -add test1_SEED2_tfce_corrp_tstat3.nii.gz -add test1_SEED3_tfce_corrp_tstat3.nii.gz -add test1_SEED4_tfce_corrp_tstat3.nii.gz -add test1_SEED5_tfce_corrp_tstat3.nii.gz
+test1_SEED1_tfce_corrp_tstat4.nii.gz -add test1_SEED2_tfce_corrp_tstat4.nii.gz -add test1_SEED3_tfce_corrp_tstat4.nii.gz -add test1_SEED4_tfce_corrp_tstat4.nii.gz -add test1_SEED5_tfce_corrp_tstat4.nii.gz
+test1_SEED1_tfce_corrp_tstat5.nii.gz -add test1_SEED2_tfce_corrp_tstat5.nii.gz -add test1_SEED3_tfce_corrp_tstat5.nii.gz -add test1_SEED4_tfce_corrp_tstat5.nii.gz -add test1_SEED5_tfce_corrp_tstat5.nii.gz
+test1_SEED1_tfce_corrp_tstat6.nii.gz -add test1_SEED2_tfce_corrp_tstat6.nii.gz -add test1_SEED3_tfce_corrp_tstat6.nii.gz -add test1_SEED4_tfce_corrp_tstat6.nii.gz -add test1_SEED5_tfce_corrp_tstat6.nii.gz
+Merging text files
+Renaming raw stats
+Done

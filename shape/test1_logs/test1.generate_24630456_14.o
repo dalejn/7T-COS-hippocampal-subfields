@@ -1,0 +1,9 @@
+randomise options: -i lh.labels-T1_trans_merged.nii.gz -o test1 -d design_absolute_age.mat -t design.con -n 500 -D -T -n 100 -o test1_SEED2 --seed=2 --skipTo=7 
+Seeding with 2
+Loading Data: 
+Data loaded
+3.45973e+07 permutations required for exhaustive test of t-test 7
+Doing 100 random permutations
+Starting permutation 1 (Unpermuted data)
+Starting permutation 2
+Warning: tfce has detected a large number of integral steps. This operation may require a great deal of time to complete.

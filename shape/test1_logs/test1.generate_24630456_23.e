@@ -1,0 +1,10 @@
+ERROR: ld.so: object '/usr/NX/scripts/vgl/libdlfaker.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/NX/scripts/vgl/librrfaker.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/NX/scripts/vgl/libdlfaker.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/NX/scripts/vgl/librrfaker.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/NX/scripts/vgl/libdlfaker.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/NX/scripts/vgl/librrfaker.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/NX/scripts/vgl/libdlfaker.so' from LD_PRELOAD cannot be preloaded: ignored.
+ERROR: ld.so: object '/usr/NX/scripts/vgl/librrfaker.so' from LD_PRELOAD cannot be preloaded: ignored.
+Warning: Data demeaning selected, but at least one design column has non-zero mean - therefore invoking automatic demeaning of design matrix
+slurmstepd: error: *** JOB 24630905 ON cn0300 CANCELLED AT 2016-10-04T21:40:48 DUE TO TIME LIMIT ***
