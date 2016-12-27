@@ -1,0 +1,20 @@
+Steps
+For each subject
+
+- Run "freesurferPrep.sh subID dicomSource"
+   - Create subject dir and convert all scans from DICOM to nifti (d???/nii)
+   - Does bias field correction with fsl_anat
+   - Convert to freesurfer format 
+- Run freesurfer with flags for hippo SF segmentation
+    recon-all -s d??? -all -no-isrunning -openmp 4 -hippocampal-subfields-T1 
+- Align the two hippo scans together (t2HipAlgn.sh)
+- Run t2regs.sh which will
+  - Align the t2wb to T1_biascorr (FSL, epi_reg)
+  - Align the hipp_algn_avg to the t2wb (flirt)
+  - Combine the two transforms above to get hipp to T1_biascorr (FSL tools)
+  - Convert transform from FSL format to ITK format (c2d_affine_tool)
+  - For both the left and right hippocampus
+     - Apply transform above to get hipp_t2s to freesurfer hipp sf label space
+     - Apply identity transform to T1_biascorr with the hipp sf label as ref
+
+Once this is done for all subjects, we can run the ANTS buildTemplate script to warp the subjects together. Docs to be written.

@@ -1,0 +1,36 @@
+#!/bin/sh
+
+export ANTSPATH=/data/adamt/build/antsbin/bin/
+
+# NONE OF THIS WORKS
+
+$ANTSPATH/antsRegistration -d 3 \
+    --float 1 -v 1 \
+    -r [hip_algn_avg.nii.gz,T1_biascorr.nii.gz,1] \
+    -t Rigid[0.1] \
+    -m CC[hip_algn_avg.nii.gz,T1_biascorr.nii.gz,1,32,Regular,0.25] \
+    -c [1000x500x250x100,1e-8,10] \
+    -f 8x4x2x1 -s 4x2x1x0 \
+    -o hipp_to_t1_ants
+exit
+
+$ANTSPATH/antsRegistration -d 3 \
+    --float 1 -v 1 \
+    --initial-moving-transform [T1_biascorr.nii.gz,hip_algn_avg.nii.gz,1] \
+    -r [T1_biascorr.nii.gz,hip_algn_avg.nii.gz,1] \
+    -t Rigid[0.1] \
+    -m MI[T1_biascorr.nii.gz,hip_algn_avg.nii.gz,0.9,32,Regular,0.25] \
+    -c [1] \
+    -f 1 -s 1 \
+    -o hipp_to_t1_ants_$RANDOM
+
+
+$ANTSPATH/antsRegistration -d 3 \
+    --float 1 -v 1 \
+    --initial-moving-transform [T1_biascorr.nii.gz,hip_algn_avg.nii.gz,1] \
+    -r [T1_biascorr.nii.gz,hip_algn_avg.nii.gz,1] \
+    -t Rigid[0.1] \
+    -m CC[T1_biascorr.nii.gz,hip_algn_avg.nii.gz,0.9,32,Regular,0.25] \
+    -c [1000x500x250x100,1e-8,10] \
+    -f 8x4x2x1 -s 4x2x1x0 \
+    -o hipp_to_t1_ants_$RANDOM

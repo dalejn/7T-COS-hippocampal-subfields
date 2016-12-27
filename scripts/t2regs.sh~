@@ -1,0 +1,75 @@
+#!/bin/sh
+
+set -e -x
+# Assumptions:
+# Subject ID is passed on the command line followed by fullpath to dicom directory
+# FreeSurfer is loaded and SUBJECTS_DIR is set
+# cpb/proj_conf.sh has been sourced
+
+if [[ -z "${1// }" ]] || [ ! -e $base/$1 ]; then 
+    echo "Help. something is wrong"; exit 1;fi
+sub=$1
+sd=$SUBJECTS_DIR
+wd=$sd/$sub
+
+cd $wd/
+
+
+# Register the T2WB to the T1
+if [ ! -e $wd/struc.anat/t2wb_to_t1.nii.gz ];then
+epi_reg --epi=$wd/hipp/t2wb \
+    --t1=$wd/struc.anat/T1_biascorr \
+    --t1brain=$wd/struc.anat/T1_biascorr_brain \
+    --wmseg=$wd/struc.anat/T1_fast_pve_2 \
+    --out=$wd/struc.anat/t2wb_to_t1
+fi
+subs_w_bad_qform=""
+
+# Register the high res hipp T2 to the T2 WB
+if [[ $subs_w_bad_qfrom == *$sub* ]];then 
+    flirt -in $wd/hipp/hip_algn_avg \
+	-ref $wd/hipp/t2wb -nosearch \
+	-omat  $wd/hipp/hip_avg_to_t2wb.mat \
+	-out $wd/hipp/hip_avg_to_t2wb
+else
+    flirt -in $wd/hipp/hip_algn_avg \
+	-ref $wd/hipp/t2wb -usesqform -nosearch \
+	-omat $wd/hipp/hip_avg_to_t2wb.mat \
+	-out $wd/hipp/hip_avg_to_t2wb
+fi
+
+# Combine those two transforms together
+
+concat_xfm.sh $wd/hipp/hip_avg_to_t2wb.mat \
+    $wd/struc.anat/t2wb_to_t1.mat \
+    $wd/hipp/hipp_to_t1.mat
+ 
+# Convert them to ANTS 
+c3d_affine_tool -ref $wd/struc.anat/T1_biascorr_brain.nii.gz  \
+    -src $wd/hipp/hip_algn_avg.nii.gz  \
+     $wd/hipp/hipp_to_t1.mat \
+    -fsl2ras -oitk $wd/hipp/hipp_to_t1_itkxfm.txt
+
+
+for s in r l; do
+
+# Convert the hipp label from mgz to nii
+mri_convert $wd/mri/${r}h.hippoSfLabels-T1.v10.mgz \
+    $wd/hipp/${r}h.hippoSfLabels-T1.v10.nii.gz
+
+# Get the T1 in hipp space
+    $ANTSPATH/antsApplyTransforms -d 3 \
+	--float 1 -v 1 \
+	-i $wd/struc.anat/T1_biascorr.nii.gz  \
+	-o $wd/hipp/${r}hipp_t1.nii.gz \
+	-r $wd/hipp/${r}h.hippoSfLabels-T1.v10.nii.gz
+    
+# Apply the new one to the highres hippo (ANTS)
+    $ANTSPATH/antsApplyTransforms -d 3 \
+	--float 1 -v 1 \
+	-i $wd/hipp/hip_algn_avg.nii.gz  \
+	-o $wd/hipp/${s}hipp_t2s.nii.gz \
+	-r $wd/hipp/{$r}h.hippoSfLabels-T1.v10.nii.gz \
+	-t $wd/hipp/hipp_to_t1_itkxfm.txt 
+done
+

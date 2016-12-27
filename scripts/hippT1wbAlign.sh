@@ -1,0 +1,189 @@
+#!/bin/sh
+set -e -x
+
+
+
+base=/data/zhoud4/
+fsd=$SUBJECTS_DIR
+sub=d701
+
+if /bin/true;then #HACK!
+
+# align the T2 hippo scan to the T2 whole brain scan
+# There are a couple ways to approach this, depending on if the qform is good.
+# There is no way to know if the qform is intact except for trial and error
+subs_w_bad_qform=""
+
+if [[ $subs_w_bad_qfrom == *$sub* ]]
+    flirt -in hip_algn_avg -ref t2wb -nosearch \
+	-omat hip_avg_to_t2wb.mat -out hip_avg_to_t2wb&
+else
+    flirt -in hip_algn_avg -ref t2wb -usesqform -nosearch \
+	-omat hip_avg_to_t2wb.mat -out hip_avg_to_t2wb&
+fi
+
+
+# align t2wb to t1
+if [ ! -e t2wb_to_t1.nii.gz ]; then  #this takes a while. Don't redo it if you don't have to
+    epi_reg -v --epi=t2wb --t1=T1_biascorr \
+	--t1brain=T1_biascorr_brain --out=t2wb_to_t1&
+    wait
+fi
+
+# past xfms together
+concat_xfm.sh hip_avg_to_t2wb.mat t2wb_to_t1.mat hip_to_t1_init.mat
+
+# tweak the hip to t1 alignment with mutual info
+
+#flirt -in hip_algn_avg -init hip_to_t1_init.mat \
+# -ref T1_biascorr_brain -out hip_to_t1_mi -omat hip_to_t1.mat 
+# -cost mutualinfo -nosearch
+
+# OR
+flirt -ref T1_biascorr_brain -in hip_algn_avg  -dof 6 -cost bbr \
+    -wmseg T1_biascorr_brain_wmseg  -init hip_to_t1_init.mat \
+    -omat hip_to_t1.mat -schedule ${FSLDIR}/etc/flirtsch/bbr.sch \
+    -finesearch 5 -coarsesearch 5
+
+# apply the xfm to the hip image
+applywarp --in=hip_algn_avg --ref=T1_biascorr --premat=hip_to_t1.mat \
+    --interp=spline --out=hip_to_t1
+# Invert the hip to t1 xfm
+convert_xfm -omat t1_to_hip.mat -inverse  hip_to_t1.mat
+
+# apply the flipped xfm to the the first segs to align them to the hip image
+applywarp --in=T1_firstseg.nii.gz --ref=hip_algn_avg --premat=t1_to_hip.mat \
+    --interp=nn --out=hip_firstsegs
+
+applywarp --in=T1_biascorr.nii.gz --ref=hip_algn_avg --premat=t1_to_hip.mat \
+    --interp=spline --out=t1_hipspace
+
+# Linear align the T1 to standard space (2mm)
+flirt -in T1_biascorr_brain -ref $FSLDIR/data/standard/MNI152_T1_2mm_brain \
+    -refweight  $base/conf/MNI152_T1_2mm_brain_mask_temporal_hole \
+    -omat t1_to_mni_2mm.mat -out t1_to_mni_2mm
+
+# Non-linear align the T1 to standard space (2mm)
+fnirt --in=T1_biascorr_brain --ref=$FSLDIR/data/standard/MNI152_T1_2mm_brain \
+    --refmask=$base/conf/MNI152_T1_2mm_brain_mask_temporal_hole \
+    --config=T1_2_MNI152_2mm --aff=t1_to_mni_2mm.mat \
+    --cout=t1_nl_mni_2mm_warp
+
+# apply the FSL warp to the T1
+applywarp --in=T1_biascorr_brain \
+    --warp=t1_nl_mni_2mm_warp \
+    --ref=$FSLDIR/data/standard/MNI152_T1_2mm_brain \
+    --out=t1_nl_mni_2mm
+
+# Non-linear align the T1 to 1mm standard space with ANTS
+
+fxdImg=$FSLDIR/data/standard/MNI152_T1_1mm_brain.nii.gz
+movImg=T1_biascorr_brain.nii.gz
+outPrefix=t1_to_MNI_ants
+
+$ANTSPATH/antsRegistration -d 3 \
+    --float 1 -u 1 -w [0.01,0.99] -z 1 \
+    -r [${fxdImg},${movImg},1] \
+    -t Rigid[0.1] \
+    -m MI[${fxdImg},${movImg},1,32,Regular,0.25] \
+    -c [1000x500x250x100,1e-8,10] \
+    -f 8x4x2x1 -s 4x2x1x0 \
+    -t Affine[0.1] \
+    -m MI[${fxdImg},${movImg},1,32,Regular,0.25] \
+    -c [1000x500x250x100,1e-8,10] \
+    -f 8x4x2x1 -s 4x2x1x0 \
+    -t SyN[0.1,3,0] \
+    -m CC[${fxdImg},${movImg},1,4] \
+    -c [100x100x70x20,1e-9,10] \
+    -f 6x4x2x1 -s 3x2x1x0 \
+    -v 1 -o ./$outPrefix
+
+# Apply the ANTS Warp
+$ANTSPATH/antsApplyTransforms -d 3 \
+    --float 1 -v 1 \
+    -i $movImg  -o ${outPrefix}.nii.gz \
+    -r ${fxdImg} \
+    -t ${outPrefix}1Warp.nii.gz \
+    -t ${outPrefix}0GenericAffine.mat 
+
+# Convert the warp to 0.5mm
+convertwarp --warp1=t1_nl_mni_2mm_warp \
+    --postmat=$base/conf/MNI152_T1_2mm_to_0.5mm.mat \
+    --ref=$base/conf/MNI152_T1_0.5mm_brain \
+    --out=t1_nl_mni_0.5mm_warp 
+
+fi
+
+###########
+#### NEED MORE THAN 5GB for the next step
+
+# Apply the ANTS warp to the hipp label image
+$ANTSPATH/antsApplyTransforms -d 3 \
+    --float 1 -v 1 \
+    -i hip_algn_avg  -o ${outPrefix}.nii.gz \
+    -r $base/conf/MNI152_T1_0.5mm_brain} \
+    -t ${outPrefix}1Warp.nii.gz \
+    -t ${outPrefix}0GenericAffine.mat 
+
+
+# Apply the warp to the hip image
+applywarp --in=hip_algn_avg \
+    --premat=hip_to_t1.mat \
+    --warp=t1_nl_mni_0.5mm_warp \
+    --ref=$base/conf/MNI152_T1_0.5mm_brain \
+    --out=hip_nl_mni_0.5mm
+
+# Apply with the rotation and limited FOV XFM
+applywarp --in=hip_algn_avg \
+    --premat=hip_to_t1.mat \
+    --warp=t1_nl_mni_0.5mm_warp \
+    --ref=$base/conf/hrhipptemplate_rot_tr_crop \
+    --postmat=$base/scripts/hrhipptemplate_rot_tr_crop.mat \
+    --out=hip_nl_mni_0.5mm_rotcrop
+#Now do the same with the T1
+applywarp --in=T1_biascorr \
+    --warp=t1_nl_mni_0.5mm_warp \
+    --ref=$base/conf/hrhipptemplate_rot_tr_crop \
+    --postmat=$base/scripts/hrhipptemplate_rot_tr_crop.mat \
+    --out=t1_hipspace_mni_0.5mm_rotcrop
+
+#Merge all XFMs into one
+concat_xfm.sh hip_to_t1.mat t1_to_mni_2mm.mat hip_to_mni_2mm.mat
+concat_xfm.sh hip_to_mni_2mm.mat \
+    $base/conf/MNI152_T1_2mm_to_0.5mm.mat \
+    hip_to_mni_0.5mm.mat
+concat_xfm.sh hip_to_mni_0.5mm.mat \
+    $base/scripts/hrhipptemplate_rot_tr_crop.mat \
+    hip_to_mni_rot_crop.mat
+applywarp --premat=hip_to_mni_rot_crop.mat --in=hip_algn_avg \
+    --ref=$base/conf/hrhipptemplate \
+    --out=hip_lin_to_hrtemplate
+flirt -in hip_firstsegs.nii.gz  -out firstsegs_rotcrop \
+    -init hip_to_mni_rot_crop.mat -ref hip_nl_mni_0.5mm_rotcrop.nii.gz \
+    -applyxfm -interp nearestneighbour
+fslmaths hip_firstsegs -uthr 53.5 -thr 52.5 rhipp_mask
+fslmaths hip_firstsegs -uthr 17.5 -thr 16.5 lhipp_mask
+fslmaths  lhipp_mask -add rhipp_mask hipp_mask
+rm lhipp_mask.nii.gz rhipp_mask.nii.gz
+
+fslmaths hip_firstsegs -uthr 53.5 -thr 52.5 -bin -dilM rhipp_mask_dil
+fslmaths hip_firstsegs -uthr 17.5 -thr 16.5 -bin -dilM lhipp_mask_dil
+
+for s in r l; do
+# Mask out right hipp in native space
+     fslmaths hip_algn_avg -mas ${s}hipp_mask_dil masked_${s}hipp
+    m=`fslstats masked_${s}hipp -M`
+    fslmaths ${s}hipp_mask_dil -sub 1 -abs -bin inv_${s}hipp_mask
+    fslmaths inv_${s}hipp_mask -mul $m -add masked_${s}hipp ${s}hipp_mean_surround
+# Now in MNI rotcrop space
+    fslmaths firstsegs_rotcrop -uthr 53.5 -thr 52.5 -bin -dilM ${s}hipp_mask_rotcrop
+    fslmaths hip_nl_mni_0.5mm_rotcrop -mas ${s}hipp_mask_rotcrop masked_${s}hipp_rotcrop
+    fslmaths ${s}hipp_mask_rotcrop -sub 1 -abs -bin inv_${s}hipp_mask_rotcrop
+    fslmaths inv_${s}hipp_mask_rotcrop -mul $m -add masked_${s}hipp_rotcrop ${s}hipp_mean_surround_rotcrop
+done
+
+
+
+exit
+
+

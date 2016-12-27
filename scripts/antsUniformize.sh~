@@ -1,0 +1,19 @@
+#!/bin/sh
+
+sub=$1
+export FREESURFER_HOME=/data/adamt/Apps/fs6beta/
+export SUBJECTS_DIR=/data/zhoud4/fs_subjects
+export ANTSPATH=/data/adamt/build/antsbin/bin/
+source $FREESURFER_HOME/SetUpFreeSurfer.sh
+
+if [ ! -e $SUBJECTS_DIR/$sub ];then
+    echo  "$SUBJECTS_DIR/$sub doesn't exist"
+    exit 1
+fi
+
+mkdir -p $SUBJECTS_DIR/$sub/nii/
+cp $SUBJECTS_DIR/$sub/mri/orig.mgz $SUBJECTS_DIR/$sub/nii/orig.nii.gz
+mri_convert $SUBJECTS_DIR/$sub/mri/orig.mgz $SUBJECTS_DIR/$sub/nii/orig.nii.gz
+$ANTSPATH/N4BiasFieldCorrection -d 3 -b [200] -c [50x50x40x30,0.00000001] \
+    -i .gz -o $wd/r_t2_bfc.nii.gz \
+    -r 0 -s 2 &
